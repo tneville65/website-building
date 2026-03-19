@@ -5,7 +5,9 @@ import { ScrollTrigger } from "gsap/ScrollTrigger";
 
 gsap.registerPlugin(ScrollTrigger);
 
-const ITEM_H = 48;
+const ITEM_H = 52;
+const VISIBLE_ROWS = 5;
+const CENTER_ROW = Math.floor(VISIBLE_ROWS / 2); // row 2 (0-indexed) = center
 
 const columns = [
   { letter: "L", dir: 1, items: ["LIQUIDITY","LEVERAGE","LICENSED","LIFE SCIENCES","LONG-TERM","LUMINARY","LIQUID ASSETS","LEADERSHIP","LIMITED PARTNER","LIFE EXPECTANCY","LEVERAGE RATIO","LONGITUDINAL","LAB RESEARCH","LATERAL THINKING","LICENSED MD","L"] },
@@ -22,115 +24,186 @@ const columns = [
 export default function SlotMachine() {
   const sectionRef = useRef<HTMLDivElement>(null);
   const colRefs = useRef<(HTMLDivElement | null)[]>([]);
-  const titleRef = useRef<HTMLDivElement>(null);
+  const boxRefs = useRef<(HTMLDivElement | null)[]>([]);
+  const hintRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     const section = sectionRef.current;
     if (!section) return;
 
-    const count = columns[0].items.length;
-    const landY = -((count - 1) * ITEM_H);
+    const viewHeight = ITEM_H * VISIBLE_ROWS;
 
-    // Set initial positions — start off-screen per direction
     colRefs.current.forEach((col, i) => {
       if (!col) return;
+      const count = columns[i].items.length;
       const dir = columns[i].dir;
-      const startY = dir === 1 ? 0 : -(count * ITEM_H * 0.6);
+
+      // The letter is the last item. We want it to land at CENTER_ROW.
+      // landY positions the strip so item[count-1] is at CENTER_ROW
+      const landY = -(count - 1 - CENTER_ROW) * ITEM_H;
+
+      // Start: offset so we show middle items first, not the letter
+      const startY = dir === 1
+        ? landY - (count * ITEM_H * 0.5)
+        : landY + (count * ITEM_H * 0.5);
+
       gsap.set(col, { y: startY });
       (col as any)._startY = startY;
+      (col as any)._landY = landY;
     });
 
-    // Pin the section while columns animate to their letters
     const tl = gsap.timeline({
       scrollTrigger: {
         trigger: section,
         start: "top top",
-        end: "+=180%",
+        end: "+=200%",
         pin: true,
-        scrub: 0.8,
+        scrub: 0.7,
         anticipatePin: 1,
+        onUpdate: (self) => {
+          // When 90% complete, light up the boxes
+          if (self.progress > 0.88) {
+            boxRefs.current.forEach((box) => {
+              if (box) {
+                box.style.backgroundColor = "rgba(201, 168, 76, 0.2)";
+                box.style.borderColor = "rgba(201, 168, 76, 0.8)";
+                box.style.boxShadow = "0 0 20px rgba(201, 168, 76, 0.3)";
+              }
+            });
+          } else {
+            boxRefs.current.forEach((box) => {
+              if (box) {
+                box.style.backgroundColor = "rgba(201, 168, 76, 0.05)";
+                box.style.borderColor = "rgba(201, 168, 76, 0.3)";
+                box.style.boxShadow = "none";
+              }
+            });
+          }
+        },
       },
     });
 
-    // All columns animate simultaneously
-    colRefs.current.forEach((col, i) => {
+    colRefs.current.forEach((col) => {
       if (!col) return;
-      const startY = (col as any)._startY ?? 0;
-      tl.fromTo(col, { y: startY }, { y: landY, ease: "power2.inOut", duration: 1 }, 0);
+      tl.fromTo(col,
+        { y: (col as any)._startY },
+        { y: (col as any)._landY, ease: "power2.inOut", duration: 1 },
+        0
+      );
     });
 
-    // Fade in the "scroll to reveal" text
-    if (titleRef.current) {
-      tl.to(titleRef.current, { opacity: 0, duration: 0.3 }, 0.7);
+    // Fade hint text out early
+    if (hintRef.current) {
+      tl.to(hintRef.current, { opacity: 0, duration: 0.2 }, 0.1);
     }
 
     return () => ScrollTrigger.getAll().forEach(t => { if (t.vars?.trigger === section) t.kill(); });
   }, []);
 
+  const windowH = ITEM_H * VISIBLE_ROWS;
+
   return (
     <section
       ref={sectionRef}
-      className="relative bg-[#0A1628] overflow-hidden"
-      style={{ height: "100vh" }}
+      className="bg-[#0A1628]"
+      style={{ height: "100vh", overflow: "hidden" }}
     >
-      <div style={{ position: "absolute", top: 0, left: 0, right: 0, bottom: 0, display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center" }}>
-        {/* Scroll hint */}
-        <div ref={titleRef} className="mb-6 text-center">
-          <p className="text-gray-600 text-[10px] uppercase tracking-[0.5em]">Scroll to reveal</p>
+      <div style={{
+        position: "absolute",
+        top: 0, left: 0, right: 0, bottom: 0,
+        display: "flex",
+        flexDirection: "column",
+        alignItems: "center",
+        justifyContent: "center",
+        gap: "16px",
+      }}>
+        {/* Hint text */}
+        <div ref={hintRef} style={{ marginBottom: 8 }}>
+          <p style={{ color: "rgba(255,255,255,0.2)", fontSize: 10, letterSpacing: "0.4em", textTransform: "uppercase" }}>
+            Scroll to reveal
+          </p>
         </div>
 
-        {/* Columns grid */}
-        <div
-          className="grid w-full px-4 md:px-8 gap-0.5"
-          style={{ gridTemplateColumns: `repeat(${columns.length}, 1fr)`, maxWidth: "900px" }}
-        >
+        {/* Grid */}
+        <div style={{
+          display: "grid",
+          gridTemplateColumns: `repeat(${columns.length}, 1fr)`,
+          gap: "3px",
+          width: "min(900px, 96vw)",
+        }}>
           {columns.map((col, i) => (
             <div
               key={i}
-              className="relative overflow-hidden flex flex-col items-center"
-              style={{ height: `${ITEM_H * 5}px` }}
+              style={{
+                position: "relative",
+                height: `${windowH}px`,
+                overflow: "hidden",
+              }}
             >
-              {/* Top/bottom fade */}
-              <div className="absolute inset-x-0 top-0 h-10 bg-gradient-to-b from-[#0A1628] to-transparent z-10 pointer-events-none" />
-              <div className="absolute inset-x-0 bottom-0 h-10 bg-gradient-to-t from-[#0A1628] to-transparent z-10 pointer-events-none" />
-              {/* Center highlight - solid gold box */}
-              <div className="absolute top-1/2 -translate-y-1/2 inset-x-0 h-12 bg-[#C9A84C]/15 border border-[#C9A84C]/50 z-0" />
+              {/* Top gradient fade */}
+              <div style={{ position: "absolute", top: 0, left: 0, right: 0, height: ITEM_H * 1.5, background: "linear-gradient(to bottom, #0A1628, transparent)", zIndex: 2, pointerEvents: "none" }} />
+              {/* Bottom gradient fade */}
+              <div style={{ position: "absolute", bottom: 0, left: 0, right: 0, height: ITEM_H * 1.5, background: "linear-gradient(to top, #0A1628, transparent)", zIndex: 2, pointerEvents: "none" }} />
 
-              {/* Scrolling content */}
+              {/* Center highlight box */}
+              <div
+                ref={el => { boxRefs.current[i] = el; }}
+                style={{
+                  position: "absolute",
+                  top: CENTER_ROW * ITEM_H,
+                  left: 0,
+                  right: 0,
+                  height: ITEM_H,
+                  backgroundColor: "rgba(201, 168, 76, 0.05)",
+                  border: "1px solid rgba(201, 168, 76, 0.3)",
+                  zIndex: 1,
+                  transition: "all 0.4s ease",
+                }}
+              />
+
+              {/* Scrolling strip */}
               <div
                 ref={el => { colRefs.current[i] = el; }}
-                className="absolute top-0 flex flex-col items-center w-full"
+                style={{ position: "absolute", top: 0, left: 0, right: 0 }}
               >
                 {col.items.map((item, j) => {
                   const isLetter = j === col.items.length - 1;
                   return (
                     <div
                       key={j}
-                      className="flex items-center justify-center w-full"
-                      style={{ height: `${ITEM_H}px`, minHeight: `${ITEM_H}px` }}
+                      style={{
+                        height: ITEM_H,
+                        display: "flex",
+                        alignItems: "center",
+                        justifyContent: "center",
+                        position: "relative",
+                        zIndex: 3,
+                      }}
                     >
                       {isLetter ? (
-                        <span
-                          className="font-serif font-bold text-[#C9A84C] relative z-20"
-                          style={{ fontSize: "clamp(1.5rem, 3vw, 2.5rem)" }}
-                        >
+                        <span style={{
+                          fontFamily: "var(--font-playfair), serif",
+                          fontSize: "clamp(1.4rem, 2.5vw, 2rem)",
+                          fontWeight: 700,
+                          color: "#C9A84C",
+                          lineHeight: 1,
+                        }}>
                           {item}
                         </span>
                       ) : (
-                        <span
-                          className="text-gray-600 font-medium"
-                          style={{
-                            fontSize: "8px",
-                            writingMode: "vertical-lr",
-                            textOrientation: "mixed",
-                            transform: "rotate(180deg)",
-                            textTransform: "uppercase",
-                            letterSpacing: "0.1em",
-                            maxHeight: `${ITEM_H - 6}px`,
-                            overflow: "hidden",
-                            display: "block",
-                          }}
-                        >
+                        <span style={{
+                          fontSize: "7px",
+                          color: "rgba(255,255,255,0.25)",
+                          textTransform: "uppercase",
+                          letterSpacing: "0.08em",
+                          writingMode: "vertical-lr",
+                          textOrientation: "mixed",
+                          transform: "rotate(180deg)",
+                          maxHeight: ITEM_H - 8,
+                          overflow: "hidden",
+                          display: "block",
+                          fontWeight: 500,
+                        }}>
                           {item}
                         </span>
                       )}
@@ -138,20 +211,6 @@ export default function SlotMachine() {
                   );
                 })}
               </div>
-            </div>
-          ))}
-        </div>
-
-        {/* LEAGUEMED label below */}
-        <div
-          className="grid mt-2 px-4 md:px-8 gap-0.5"
-          style={{ gridTemplateColumns: `repeat(${columns.length}, 1fr)`, maxWidth: "900px", width: "100%" }}
-        >
-          {columns.map((col, i) => (
-            <div key={i} className="text-center">
-              <span className="text-[#C9A84C]/20 font-serif text-xs font-bold uppercase tracking-widest">
-                {col.letter}
-              </span>
             </div>
           ))}
         </div>

@@ -5,6 +5,8 @@ import { useRef } from "react";
 import Link from "next/link";
 import Marquee from "@/components/Marquee";
 import SlotMachine from "@/components/SlotMachine";
+import DNAHelix from "@/components/DNAHelix";
+import MicroscopeReveal from "@/components/MicroscopeReveal";
 
 const ParticleGlobe = dynamic(() => import("@/components/ParticleGlobe"), { ssr: false });
 
@@ -149,6 +151,9 @@ export default function Home() {
         </motion.div>
       </section>
 
+      {/* SLOT MACHINE -- right under hero */}
+      <SlotMachine />
+
       {/* MARQUEE */}
       <div className="bg-[#060E1A]">
         <Marquee />
@@ -186,7 +191,10 @@ export default function Home() {
         </div>
       </section>
 
-      {/* INVESTMENT FOCUS */}
+      {/* MICROSCOPE REVEAL -- INVESTMENT FOCUS */}
+      <MicroscopeReveal />
+
+      {/* ORIGINAL INVESTMENT FOCUS - REPLACED */}
       <section className="py-40 bg-[#0A1628]">
         <div className="max-w-6xl mx-auto px-8">
           <AnimatedSection>
@@ -220,8 +228,6 @@ export default function Home() {
       <div className="bg-[#060E1A]">
         <Marquee direction={-1} />
       </div>
-
-      <SlotMachine />
 
       {/* FEATURED OPPORTUNITIES */}
       <section id="opportunities" className="py-40 bg-[#060E1A]">

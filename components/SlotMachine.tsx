@@ -1,99 +1,91 @@
 "use client";
 import { useRef, useEffect } from "react";
-import { useInView } from "framer-motion";
 import { gsap } from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 
 gsap.registerPlugin(ScrollTrigger);
 
-// Each column scrolls to land on one letter of LEAGUEMED
-// The columns alternate direction (odd = down, even = up)
+const ITEM_H = 44;
+
 const columns = [
   {
     letter: "L",
-    words: ["LIFE SCIENCES", "LIQUIDITY", "LEVERAGE", "LONG-TERM", "LICENSED", "LEAGUEMED", "LUMINARY", "LIFE SCIENCES"],
-    landOn: "LEAGUEMED",
     dir: 1,
+    items: ["LIQUIDITY","LEVERAGE","LICENSED","LIFE SCIENCES","LONG-TERM","LUMINARY","LIQUID ASSETS","LEADERSHIP","LIMITED PARTNER","LIFE EXPECTANCY","LEVERAGE RATIO","LONGITUDINAL","LAB RESEARCH","LATERAL THINKING","LICENSED MD","L"],
   },
   {
     letter: "E",
-    words: ["EQUITY", "EXCLUSIVE", "EXPERTISE", "EMERGING", "EVIDENCE", "LEAGUEMED", "ENDURING", "EQUITY"],
-    landOn: "LEAGUEMED",
     dir: -1,
+    items: ["EQUITY","EXCLUSIVE","EXPERTISE","EMERGING","EVIDENCE","ENDURING","EARLY ACCESS","ENTERPRISE","EXPONENTIAL","EQUITY STAKE","EXIT MULTIPLE","EVIDENCE-BASED","ECONOMIC MOAT","ESOP","EXECUTION","E"],
   },
   {
     letter: "A",
-    words: ["ACCESS", "ACCREDITED", "ADVANCED", "ALPHA", "ASSETS", "LEAGUEMED", "ANNUAL", "ACCESS"],
-    landOn: "LEAGUEMED",
     dir: 1,
+    items: ["ACCESS","ACCREDITED","ADVANCED","ALPHA","ASSETS","ANNUAL RETURN","ASYMMETRIC","ALLOCATION","ARBITRAGE","ANCHOR INVESTOR","ACCREDITED MD","AGGREGATE","APPLIED SCIENCE","ANNUALIZED","ACCRUED VALUE","A"],
   },
   {
     letter: "G",
-    words: ["GROWTH", "GLOBAL", "GENOMICS", "GRADE A", "GOVERNANCE", "LEAGUEMED", "GAINS", "GROWTH"],
-    landOn: "LEAGUEMED",
     dir: -1,
+    items: ["GROWTH","GLOBAL","GENOMICS","GRADE A","GOVERNANCE","GAINS","GP ECONOMICS","GROSS RETURN","GENETICS","GROWTH EQUITY","GRANULAR DATA","GP COMMIT","GRANT FUNDING","GUIDED PORTFOLIO","GENOMIC MEDICINE","G"],
   },
   {
     letter: "U",
-    words: ["UNIQUE", "UPSIDE", "ULTRA", "UNDERWRITTEN", "UNIFIED", "LEAGUEMED", "UTILITY", "UNIQUE"],
-    landOn: "LEAGUEMED",
     dir: 1,
+    items: ["UNIQUE","UPSIDE","ULTRA-HIGH NET WORTH","UNDERWRITTEN","UNIFIED","UTILITY","UNCORRELATED","UPMARKET","UNICORN","UNIT ECONOMICS","UNDERVALUED","UNLOCK VALUE","UPSIDE CAPTURE","UNLIMITED POTENTIAL","UNLEVERED RETURN","U"],
   },
   {
     letter: "E",
-    words: ["ELITE", "EMERGING", "EXPONENTIAL", "EARLY ACCESS", "ENTERPRISE", "LEAGUEMED", "EQUITY", "ELITE"],
-    landOn: "LEAGUEMED",
     dir: -1,
+    items: ["ELITE","EMERGING","EXPONENTIAL","EARLY STAGE","ENTERPRISE VALUE","EVIDENCE BASED","EXIT STRATEGY","EQUITY MULTIPLE","EXECUTION RISK","ENDOWMENT MODEL","EARLY ACCESS","ELITE PHYSICIANS","EMBEDDED ALPHA","ENHANCED YIELD","EMERGING BIOTECH","E"],
   },
   {
     letter: "M",
-    words: ["MEDICINE", "MEDICAL", "MARKET", "MEMBERS", "MERIT", "LEAGUEMED", "MODERN", "MEDICINE"],
-    landOn: "LEAGUEMED",
     dir: 1,
+    items: ["MEDICINE","MEDICAL","MARKET RATE","MEMBERS ONLY","MERIT-BASED","MODERN PORTFOLIO","MED TECH","MILESTONE","MULTI-ASSET","MEZZANINE","MOLECULAR","MANAGED CARE","MARKET ACCESS","MILESTONE RETURN","MEDICAL GRADE","M"],
   },
   {
     letter: "E",
-    words: ["EXCLUSIVE", "EVIDENCE", "EMERGING", "ELITE", "EXECUTION", "LEAGUEMED", "EQUITY", "EXCLUSIVE"],
-    landOn: "LEAGUEMED",
     dir: -1,
+    items: ["EXCLUSIVE","EVIDENCE","EMERGING","ELITE","EXECUTION","EQUITY","ENTERPRISE","EARLY ACCESS","EXPONENTIAL","ENDURING VALUE","EVIDENCE-BASED MD","ELITE NETWORK","ECONOMIC RETURN","EXPERT UNDERWRITING","EVOLVING MARKET","E"],
   },
   {
     letter: "D",
-    words: ["DEALS", "DUE DILIGENCE", "DISTRIBUTION", "DIRECT", "DIVERSIFIED", "LEAGUEMED", "DEPLOYMENT", "DEALS"],
-    landOn: "LEAGUEMED",
     dir: 1,
+    items: ["DEALS","DUE DILIGENCE","DISTRIBUTION","DIRECT ACCESS","DIVERSIFIED","DEPLOYMENT","DATA-DRIVEN","DIAGNOSTIC","DEAL FLOW","DEBT STRUCTURE","DIFFERENTIATED","DIRECT INVEST","DISTRIBUTION RATE","DOMAIN EXPERTISE","DIAGNOSTIC AI","D"],
   },
 ];
 
-function Column({ col, index }: { col: typeof columns[0]; index: number }) {
-  const ref = useRef<HTMLDivElement>(null);
-  const containerRef = useRef<HTMLDivElement>(null);
+function SlotColumn({ col, index }: { col: typeof columns[0]; index: number }) {
+  const wrapRef = useRef<HTMLDivElement>(null);
+  const innerRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
-    const el = ref.current;
-    const container = containerRef.current;
-    if (!el || !container) return;
+    const wrap = wrapRef.current;
+    const inner = innerRef.current;
+    if (!wrap || !inner) return;
 
-    const itemHeight = 48;
-    const totalItems = col.words.length;
-    const landIndex = col.words.findIndex(w => w === "LEAGUEMED");
-    const landY = -(landIndex * itemHeight);
+    const count = col.items.length;
+    const landIndex = count - 1; // last item is the letter
+    const landY = -(landIndex * ITEM_H);
+    const startY = col.dir === 1
+      ? -(count * ITEM_H * 0.05)
+      : -(count * ITEM_H * 0.6);
 
-    // Start position — offset based on direction
-    const startY = col.dir === 1 ? -(totalItems * itemHeight * 0.3) : -(totalItems * itemHeight * 0.7);
-    gsap.set(el, { y: startY });
+    gsap.set(inner, { y: startY });
 
     const trigger = ScrollTrigger.create({
-      trigger: container,
-      start: "top 80%",
-      end: "center 30%",
-      scrub: 1.5,
+      trigger: wrap,
+      start: "top 90%",
+      end: "bottom 20%",
+      scrub: 0.8,
       onUpdate: (self) => {
-        const progress = self.progress;
-        // Ease into landing position
-        const eased = 1 - Math.pow(1 - progress, 3);
-        const currentY = startY + (landY - startY) * eased;
-        gsap.set(el, { y: currentY });
+        // Fast scroll then snap — ease out cubic
+        const p = self.progress;
+        const eased = p < 0.85
+          ? (p / 0.85)                    // linear fast
+          : 1 - Math.pow(1 - ((p - 0.85) / 0.15), 3); // ease into land
+        const y = startY + (landY - startY) * eased;
+        gsap.set(inner, { y });
       },
     });
 
@@ -102,92 +94,75 @@ function Column({ col, index }: { col: typeof columns[0]; index: number }) {
 
   return (
     <div
-      ref={containerRef}
-      className="flex flex-col items-center overflow-hidden"
-      style={{ height: "240px" }}
+      ref={wrapRef}
+      className="relative overflow-hidden flex flex-col items-center"
+      style={{ height: `${ITEM_H * 5}px`, width: "100%" }}
     >
-      {/* Top fade */}
-      <div className="absolute top-0 left-0 right-0 h-16 bg-gradient-to-b from-[#060E1A] to-transparent z-10 pointer-events-none" />
-      {/* Bottom fade */}
-      <div className="absolute bottom-0 left-0 right-0 h-16 bg-gradient-to-t from-[#060E1A] to-transparent z-10 pointer-events-none" />
+      {/* Fades */}
+      <div className="absolute inset-x-0 top-0 h-16 bg-gradient-to-b from-[#0A1628] to-transparent z-10 pointer-events-none" />
+      <div className="absolute inset-x-0 bottom-0 h-16 bg-gradient-to-t from-[#0A1628] to-transparent z-10 pointer-events-none" />
 
-      {/* Gold highlight bar in center */}
-      <div className="absolute top-1/2 -translate-y-1/2 left-0 right-0 h-12 border-y border-[#C9A84C]/20 bg-[#C9A84C]/5 z-0 pointer-events-none" />
+      {/* Center highlight */}
+      <div className="absolute top-1/2 -translate-y-1/2 inset-x-0 h-11 border-y border-[#C9A84C]/25 bg-[#C9A84C]/5 z-0" />
 
-      <div ref={ref} className="flex flex-col items-center gap-0 relative">
-        {col.words.map((word, i) => (
-          <div
-            key={i}
-            className="h-12 flex items-center justify-center text-center px-1"
-            style={{ minHeight: "48px" }}
-          >
-            <span
-              className={`text-xs uppercase tracking-widest font-medium transition-colors leading-tight text-center ${
-                word === "LEAGUEMED"
-                  ? "text-[#C9A84C] text-sm font-bold"
-                  : "text-gray-600"
-              }`}
-              style={{ writingMode: "vertical-lr", textOrientation: "mixed", transform: "rotate(180deg)" }}
+      <div ref={innerRef} className="absolute top-0 flex flex-col items-center w-full">
+        {col.items.map((item, i) => {
+          const isLetter = i === col.items.length - 1;
+          return (
+            <div
+              key={i}
+              className="flex items-center justify-center w-full"
+              style={{ height: `${ITEM_H}px`, minHeight: `${ITEM_H}px` }}
             >
-              {word}
-            </span>
-          </div>
-        ))}
+              <span
+                className={`text-center leading-tight select-none transition-colors ${
+                  isLetter
+                    ? "font-serif text-3xl font-bold text-[#C9A84C]"
+                    : "text-[9px] uppercase tracking-widest text-gray-600 font-medium"
+                }`}
+                style={!isLetter ? { writingMode: "vertical-lr", textOrientation: "mixed", transform: "rotate(180deg)", maxHeight: `${ITEM_H - 4}px`, overflow: "hidden" } : {}}
+              >
+                {item}
+              </span>
+            </div>
+          );
+        })}
       </div>
     </div>
   );
 }
 
 export default function SlotMachine() {
-  const sectionRef = useRef(null);
-  const titleRef = useRef<HTMLDivElement>(null);
-
-  useEffect(() => {
-    if (!titleRef.current) return;
-    const tl = gsap.timeline({
-      scrollTrigger: {
-        trigger: titleRef.current,
-        start: "top 85%",
-        end: "top 40%",
-        scrub: 1,
-      }
-    });
-    tl.from(titleRef.current, { opacity: 0, y: 40, duration: 1 });
-  }, []);
+  const sectionRef = useRef<HTMLDivElement>(null);
 
   return (
-    <section ref={sectionRef} className="py-40 bg-[#060E1A] relative overflow-hidden">
-      <div className="max-w-7xl mx-auto px-8">
-        <div ref={titleRef} className="text-center mb-20">
-          <p className="text-[#C9A84C] text-xs uppercase tracking-[0.4em] mb-6">The Opportunity</p>
-          <h2 className="font-serif text-5xl md:text-6xl font-bold">
-            Every Column.<br />One Community.
-          </h2>
-          <p className="text-gray-500 mt-6 text-sm uppercase tracking-widest">Scroll to reveal</p>
+    <section ref={sectionRef} className="bg-[#0A1628] pt-0 pb-24 relative overflow-hidden">
+      <div className="max-w-7xl mx-auto px-6">
+        <div className="text-center mb-4">
+          <p className="text-gray-600 text-[10px] uppercase tracking-[0.4em]">Scroll to reveal</p>
         </div>
 
-        <div className="relative">
-          <div className="grid gap-2 justify-center"
-            style={{ gridTemplateColumns: `repeat(${columns.length}, minmax(0, 1fr))` }}
-          >
-            {columns.map((col, i) => (
-              <div key={i} className="relative">
-                <Column col={col} index={i} />
-              </div>
-            ))}
-          </div>
+        <div
+          className="grid gap-1"
+          style={{ gridTemplateColumns: `repeat(${columns.length}, 1fr)` }}
+        >
+          {columns.map((col, i) => (
+            <SlotColumn key={i} col={col} index={i} />
+          ))}
+        </div>
 
-          {/* LEAGUEMED spelled out at bottom */}
-          <div className="flex justify-center mt-4 gap-2">
-            {columns.map((col, i) => (
-              <div
-                key={i}
-                className="font-serif text-2xl md:text-4xl font-bold text-[#C9A84C]/20 w-full text-center"
-              >
+        {/* Letters spelled out below */}
+        <div
+          className="grid gap-1 mt-1"
+          style={{ gridTemplateColumns: `repeat(${columns.length}, 1fr)` }}
+        >
+          {columns.map((col, i) => (
+            <div key={i} className="text-center">
+              <span className="text-[#C9A84C]/15 font-serif text-xs font-bold uppercase tracking-widest">
                 {col.letter}
-              </div>
-            ))}
-          </div>
+              </span>
+            </div>
+          ))}
         </div>
       </div>
     </section>

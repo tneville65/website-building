@@ -61,7 +61,7 @@ export default function Home() {
   return (
     <>
       {/* HERO */}
-      <section ref={heroRef} className="relative min-h-screen flex items-center justify-center overflow-hidden pb-32">
+      <section ref={heroRef} className="relative min-h-screen flex items-center justify-center overflow-hidden pb-32 z-10">
         <div className="absolute inset-0 bg-gradient-to-br from-[#030810] via-[#0A1628] to-[#0D1F3C]" />
 
         {/* Noise texture */}

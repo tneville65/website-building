@@ -4,6 +4,7 @@ import { motion, useScroll, useTransform, useInView } from "framer-motion";
 import { useRef } from "react";
 import Link from "next/link";
 import Marquee from "@/components/Marquee";
+import SlotMachine from "@/components/SlotMachine";
 
 const ParticleGlobe = dynamic(() => import("@/components/ParticleGlobe"), { ssr: false });
 
@@ -219,6 +220,8 @@ export default function Home() {
       <div className="bg-[#060E1A]">
         <Marquee direction={-1} />
       </div>
+
+      <SlotMachine />
 
       {/* FEATURED OPPORTUNITIES */}
       <section id="opportunities" className="py-40 bg-[#060E1A]">

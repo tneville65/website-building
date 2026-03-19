@@ -3,7 +3,7 @@ import { Playfair_Display, Inter } from "next/font/google";
 import "./globals.css";
 import FullscreenNav from "@/components/FullscreenNav";
 import Footer from "@/components/Footer";
-import CursorFollower from "@/components/CursorFollower";
+import DiamondCursor from "@/components/DiamondCursor";
 import SmoothScroll from "@/components/SmoothScroll";
 
 const playfair = Playfair_Display({
@@ -33,7 +33,7 @@ export default function RootLayout({
     <html lang="en" className={`${playfair.variable} ${inter.variable}`}>
       <body className="font-sans antialiased bg-[#0A1628] text-white cursor-none">
         <SmoothScroll>
-          <CursorFollower />
+          <DiamondCursor />
           <FullscreenNav />
           <main>{children}</main>
           <Footer />

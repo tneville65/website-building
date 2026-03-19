@@ -1,8 +1,10 @@
 import type { Metadata } from "next";
 import { Playfair_Display, Inter } from "next/font/google";
 import "./globals.css";
-import Navbar from "@/components/Navbar";
+import FullscreenNav from "@/components/FullscreenNav";
 import Footer from "@/components/Footer";
+import CursorFollower from "@/components/CursorFollower";
+import SmoothScroll from "@/components/SmoothScroll";
 
 const playfair = Playfair_Display({
   subsets: ["latin"],
@@ -29,10 +31,13 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en" className={`${playfair.variable} ${inter.variable}`}>
-      <body className="font-sans antialiased bg-[#0A1628] text-white">
-        <Navbar />
-        <main>{children}</main>
-        <Footer />
+      <body className="font-sans antialiased bg-[#0A1628] text-white cursor-none">
+        <SmoothScroll>
+          <CursorFollower />
+          <FullscreenNav />
+          <main>{children}</main>
+          <Footer />
+        </SmoothScroll>
       </body>
     </html>
   );

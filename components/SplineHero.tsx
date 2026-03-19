@@ -5,24 +5,31 @@ import type { Application } from "@splinetool/runtime";
 
 export default function SplineHero() {
   const splineRef = useRef<Application | null>(null);
+  const lastScrollY = useRef(0);
 
   useEffect(() => {
-    // Forward Lenis scroll events to Spline as native scroll events
-    // Lenis fires a custom 'scroll' event on the window — we re-dispatch as wheel
-    const handleLenisScroll = (e: Event) => {
-      const splineCanvas = document.querySelector("canvas");
-      if (!splineCanvas) return;
-      // Dispatch a synthetic wheel event to the canvas so Spline sees it
+    // Listen to actual scroll position changes and notify Spline
+    // without creating a feedback loop
+    const handleScroll = () => {
+      const currentY = window.scrollY;
+      const delta = currentY - lastScrollY.current;
+      lastScrollY.current = currentY;
+
+      const splineCanvas = document.querySelector<HTMLCanvasElement>("canvas");
+      if (!splineCanvas || Math.abs(delta) < 0.5) return;
+
+      // Dispatch non-bubbling wheel event so Lenis doesn't catch it again
       const wheelEvent = new WheelEvent("wheel", {
-        bubbles: true,
-        cancelable: true,
-        deltaY: (e as any).velocity ? (e as any).velocity * 10 : 50,
+        bubbles: false,   // ← key: doesn't bubble back to Lenis
+        cancelable: false,
+        deltaY: delta * 3,
+        deltaMode: 0,
       });
       splineCanvas.dispatchEvent(wheelEvent);
     };
 
-    window.addEventListener("scroll", handleLenisScroll, { passive: true });
-    return () => window.removeEventListener("scroll", handleLenisScroll);
+    window.addEventListener("scroll", handleScroll, { passive: true });
+    return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
   const onLoad = (app: Application) => {
@@ -32,9 +39,7 @@ export default function SplineHero() {
   return (
     <div
       className="absolute inset-0"
-      style={{
-        filter: "hue-rotate(-30deg) saturate(0.65) brightness(0.82)",
-      }}
+      style={{ filter: "hue-rotate(-30deg) saturate(0.65) brightness(0.82)" }}
     >
       <Spline
         scene="https://prod.spline.design/Qb2AmcNrCEdOhDdc/scene.splinecode"

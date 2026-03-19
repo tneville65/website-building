@@ -7,6 +7,7 @@ import Marquee from "@/components/Marquee";
 import SlotMachine from "@/components/SlotMachine";
 import DNAHelix from "@/components/DNAHelix";
 import MicroscopeReveal from "@/components/MicroscopeReveal";
+import SplitText from "@/components/SplitText";
 
 const ParticleGlobe = dynamic(() => import("@/components/ParticleGlobe"), { ssr: false });
 

@@ -69,7 +69,7 @@ export default function Home() {
           style={{ backgroundImage: "url(\"data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)'/%3E%3C/svg%3E\")" }}
         />
 
-        {/* Spline 3D Hero */}
+        {/* Spline 3D Hero - interactive */}
         <SplineHero />
 
         {/* Radial gradient overlay */}
@@ -110,7 +110,7 @@ export default function Home() {
             initial={{ opacity: 0, y: 30 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.8, delay: 0.9, ease: "easeInOut" }}
-            className="text-gray-400 text-lg md:text-xl max-w-xl mx-auto leading-relaxed mb-12"
+            className="text-white/80 text-lg md:text-xl max-w-xl mx-auto leading-relaxed mb-12 font-medium"
           >
             An exclusive private investment community for physicians and medical professionals.
           </motion.p>
@@ -119,7 +119,7 @@ export default function Home() {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.7, delay: 1.1, ease: "easeInOut" }}
-            className="flex flex-col sm:flex-row gap-4 justify-center"
+            className="flex flex-col sm:flex-row gap-4 justify-center relative z-20"
           >
             <Link
               href="/membership"

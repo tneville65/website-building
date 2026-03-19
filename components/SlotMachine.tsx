@@ -75,15 +75,15 @@ function SlotColumn({ col, index }: { col: typeof columns[0]; index: number }) {
 
     const trigger = ScrollTrigger.create({
       trigger: wrap,
-      start: "top 90%",
-      end: "bottom 20%",
-      scrub: 0.8,
+      start: "top 95%",
+      end: "top 20%",
+      scrub: 0.5,
       onUpdate: (self) => {
-        // Fast scroll then snap — ease out cubic
-        const p = self.progress;
-        const eased = p < 0.85
-          ? (p / 0.85)                    // linear fast
-          : 1 - Math.pow(1 - ((p - 0.85) / 0.15), 3); // ease into land
+        // Snap to end by 70% scroll progress
+        const p = Math.min(self.progress / 0.7, 1);
+        const eased = p < 0.6
+          ? p / 0.6
+          : 1 - Math.pow(1 - ((p - 0.6) / 0.4), 3);
         const y = startY + (landY - startY) * eased;
         gsap.set(inner, { y });
       },

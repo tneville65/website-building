@@ -71,11 +71,11 @@ export default function SlotMachine() {
     <section
       ref={sectionRef}
       className="relative bg-[#0A1628] overflow-hidden"
-      style={{ minHeight: "100vh" }}
+      style={{ height: "100vh" }}
     >
-      <div className="flex flex-col items-center justify-center min-h-screen">
+      <div className="absolute inset-0 flex flex-col items-center justify-center">
         {/* Scroll hint */}
-        <div ref={titleRef} className="mb-10 text-center">
+        <div ref={titleRef} className="mb-6 text-center">
           <p className="text-gray-600 text-[10px] uppercase tracking-[0.5em]">Scroll to reveal</p>
         </div>
 
@@ -144,7 +144,7 @@ export default function SlotMachine() {
 
         {/* LEAGUEMED label below */}
         <div
-          className="grid mt-3 px-4 md:px-8 gap-0.5"
+          className="grid mt-2 px-4 md:px-8 gap-0.5"
           style={{ gridTemplateColumns: `repeat(${columns.length}, 1fr)`, maxWidth: "900px", width: "100%" }}
         >
           {columns.map((col, i) => (

@@ -56,13 +56,13 @@ export default function SlotMachine() {
       scrollTrigger: {
         trigger: section,
         start: "top top",
-        end: "+=200%",
+        end: "+=300%",
         pin: true,
         scrub: 0.7,
         anticipatePin: 1,
         onUpdate: (self) => {
           // When 90% complete, light up the boxes
-          if (self.progress > 0.88) {
+          if (self.progress > 0.7) {
             boxRefs.current.forEach((box) => {
               if (box) {
                 box.style.backgroundColor = "rgba(201, 168, 76, 0.2)";
@@ -87,7 +87,7 @@ export default function SlotMachine() {
       if (!col) return;
       tl.fromTo(col,
         { y: (col as any)._startY },
-        { y: (col as any)._landY, ease: "power2.inOut", duration: 1 },
+        { y: (col as any)._landY, ease: "power2.inOut", duration: 0.65 },
         0
       );
     });

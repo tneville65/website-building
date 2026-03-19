@@ -37,23 +37,24 @@ export default function FullscreenNav() {
           scrolled && !open ? "bg-[#0A1628]/90 backdrop-blur-md" : "bg-transparent"
         }`}
       >
-        <Link href="/" onClick={() => setOpen(false)} className="font-serif text-2xl font-bold z-50 relative">
-          <span className="text-white">League</span>
-          <span className={open ? "text-white" : "text-[#C9A84C]"}>Med</span>
+        <Link href="/" onClick={() => setOpen(false)} className="z-50 relative">
+          <Image
+            src="/leaguemed-logo.jpg"
+            alt="LeagueMed"
+            width={180}
+            height={48}
+            className="h-10 w-auto object-contain"
+            priority
+          />
         </Link>
 
-        <div className="hidden md:flex items-center gap-8 z-50 relative">
+        <div className="hidden md:flex items-center gap-6 z-50 relative">
           {!open && (
-            <Link href="/membership" className="flex items-center gap-3 group">
-              <Image
-                src="/logo-mark.jpg"
-                alt="LeagueMed Member Login"
-                width={40}
-                height={40}
-                className="rounded-sm opacity-80 group-hover:opacity-100 transition-opacity"
-                style={{ filter: "hue-rotate(200deg) saturate(0.8) brightness(0.9)" }}
-              />
-              <span className="text-xs text-[#C9A84C] uppercase tracking-widest font-medium group-hover:text-white transition-colors">Member Login</span>
+            <Link
+              href="/membership"
+              className="text-xs border border-[#C9A84C] text-[#C9A84C] hover:bg-[#C9A84C] hover:text-[#0A1628] transition-all px-5 py-2 uppercase tracking-widest font-medium"
+            >
+              Member Login
             </Link>
           )}
         </div>

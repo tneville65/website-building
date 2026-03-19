@@ -61,7 +61,7 @@ export default function Home() {
   return (
     <>
       {/* HERO */}
-      <section ref={heroRef} className="relative min-h-screen flex items-center justify-center overflow-hidden">
+      <section ref={heroRef} className="relative min-h-screen flex items-center justify-center overflow-hidden pb-32">
         <div className="absolute inset-0 bg-gradient-to-br from-[#030810] via-[#0A1628] to-[#0D1F3C]" />
 
         {/* Noise texture */}
@@ -153,8 +153,10 @@ export default function Home() {
         </motion.div>
       </section>
 
-      {/* SLOT MACHINE -- right under hero */}
-      <SlotMachine />
+      {/* SLOT MACHINE -- after hero with clearance */}
+      <div className="relative z-10">
+        <SlotMachine />
+      </div>
 
       {/* MARQUEE */}
       <div className="bg-[#060E1A]">

@@ -73,7 +73,7 @@ export default function SlotMachine() {
       className="relative bg-[#0A1628] overflow-hidden"
       style={{ height: "100vh" }}
     >
-      <div className="absolute inset-0 flex flex-col items-center justify-center">
+      <div style={{ position: "absolute", top: 0, left: 0, right: 0, bottom: 0, display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center" }}>
         {/* Scroll hint */}
         <div ref={titleRef} className="mb-6 text-center">
           <p className="text-gray-600 text-[10px] uppercase tracking-[0.5em]">Scroll to reveal</p>

@@ -42,10 +42,12 @@ export default function SlotMachine() {
       // landY positions the strip so item[count-1] is at CENTER_ROW
       const landY = -(count - 1 - CENTER_ROW) * ITEM_H;
 
-      // Start: offset so we show middle items first, not the letter
+      // Start offset — show words scrolling through, not the letter
+      // Both directions start away from landY by the same scroll distance
+      const scrollDistance = count * ITEM_H * 0.5;
       const startY = dir === 1
-        ? landY - (count * ITEM_H * 0.5)
-        : landY + (count * ITEM_H * 0.5);
+        ? landY - scrollDistance
+        : landY + scrollDistance;
 
       gsap.set(col, { y: startY });
       (col as any)._startY = startY;

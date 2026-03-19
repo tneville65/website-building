@@ -93,8 +93,8 @@ export default function SlotMachine() {
               {/* Top/bottom fade */}
               <div className="absolute inset-x-0 top-0 h-10 bg-gradient-to-b from-[#0A1628] to-transparent z-10 pointer-events-none" />
               <div className="absolute inset-x-0 bottom-0 h-10 bg-gradient-to-t from-[#0A1628] to-transparent z-10 pointer-events-none" />
-              {/* Center highlight */}
-              <div className="absolute top-1/2 -translate-y-1/2 inset-x-0 h-12 border-y border-[#C9A84C]/20 bg-[#C9A84C]/5 z-0" />
+              {/* Center highlight - solid gold box */}
+              <div className="absolute top-1/2 -translate-y-1/2 inset-x-0 h-12 bg-[#C9A84C]/15 border border-[#C9A84C]/50 z-0" />
 
               {/* Scrolling content */}
               <div
@@ -110,7 +110,10 @@ export default function SlotMachine() {
                       style={{ height: `${ITEM_H}px`, minHeight: `${ITEM_H}px` }}
                     >
                       {isLetter ? (
-                        <span className="font-serif text-2xl md:text-3xl font-bold text-[#C9A84C]">
+                        <span
+                          className="font-serif font-bold text-[#C9A84C] relative z-20"
+                          style={{ fontSize: "clamp(1.5rem, 3vw, 2.5rem)" }}
+                        >
                           {item}
                         </span>
                       ) : (

@@ -8,6 +8,7 @@ import SlotMachine from "@/components/SlotMachine";
 import DNAHelix from "@/components/DNAHelix";
 import MicroscopeReveal from "@/components/MicroscopeReveal";
 import SplitText from "@/components/SplitText";
+import LaptopScreen from "@/components/LaptopScreen";
 
 const ParticleGlobe = dynamic(() => import("@/components/ParticleGlobe"), { ssr: false });
 const SplineHero = dynamic(() => import("@/components/SplineHero"), { ssr: false });
@@ -112,27 +113,21 @@ export default function Home() {
             transition={{ duration: 0.8, delay: 0.9, ease: "easeInOut" }}
             className="text-white/80 text-lg md:text-xl max-w-xl mx-auto leading-relaxed mb-12 font-medium"
           >
-            An exclusive private investment community for physicians and medical professionals.
+            Private access to institutional-grade healthcare investments.
           </motion.p>
 
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.7, delay: 1.1, ease: "easeInOut" }}
-            className="flex flex-col sm:flex-row gap-4 justify-center relative z-20"
+            className="flex justify-center relative z-20"
           >
             <Link
               href="/membership"
               className="group relative overflow-hidden bg-[#C9A84C] text-[#0A1628] font-semibold px-10 py-4 uppercase tracking-widest text-sm transition-all duration-300 hover:shadow-[0_0_60px_rgba(201,168,76,0.5)]"
             >
-              <span className="relative z-10">Request Membership</span>
+              <span className="relative z-10">Request Access</span>
               <div className="absolute inset-0 bg-white opacity-0 group-hover:opacity-10 transition-opacity duration-300" />
-            </Link>
-            <Link
-              href="/about"
-              className="border border-white/20 hover:border-[#C9A84C]/50 text-white hover:text-[#C9A84C] px-10 py-4 uppercase tracking-widest text-sm transition-all duration-300"
-            >
-              Learn More
             </Link>
           </motion.div>
         </motion.div>
@@ -163,34 +158,56 @@ export default function Home() {
         <Marquee />
       </div>
 
-      {/* WHAT IS LEAGUEMED */}
-      <section className="py-40 bg-[#060E1A]">
-        <div className="max-w-6xl mx-auto px-8">
-          <AnimatedSection className="grid grid-cols-1 lg:grid-cols-2 gap-20 items-center">
-            <motion.div variants={fadeUp}>
-              <p className="text-[#C9A84C] text-xs uppercase tracking-[0.3em] mb-8">The Community</p>
-              <h2 className="font-serif text-5xl md:text-6xl font-bold leading-tight mb-8">
-                Built by physicians.<br />For physician<br />investors.
+      {/* ACCESS. CURATED. INSTITUTIONAL. */}
+      <section className="py-40 bg-[#060E1A] relative overflow-hidden">
+        <div className="absolute inset-0" style={{ background: 'radial-gradient(ellipse at 20% 50%, rgba(10,22,40,0.8) 0%, #060E1A 60%)' }} />
+        <div className="absolute top-0 right-0 w-64 h-64 opacity-10" style={{ background: 'linear-gradient(135deg, transparent 40%, rgba(201,168,76,0.15) 100%)' }} />
+        <div className="absolute bottom-0 left-0 w-96 h-96 opacity-5" style={{ background: 'linear-gradient(45deg, transparent 40%, rgba(201,168,76,0.2) 100%)' }} />
+        <div className="relative z-10 max-w-6xl mx-auto px-8">
+          {/* Big headline */}
+          <AnimatedSection>
+            <motion.div variants={fadeUp} className="text-center mb-20">
+              <h2 className="font-serif font-bold leading-none tracking-tight" style={{ fontSize: 'clamp(3rem, 8vw, 7rem)' }}>
+                <span className="block text-white">ACCESS.</span>
+                <span className="block text-white">CURATED.</span>
+                <span className="block text-[#C9A84C]">INSTITUTIONAL.</span>
               </h2>
-              <p className="text-gray-400 text-lg leading-relaxed mb-6">
-                LeagueMed was founded on a simple conviction: the professionals who understand medicine best should have access to the private market opportunities within it.
-              </p>
-              <p className="text-gray-500 leading-relaxed">
-                We curate, vet, and present deals exclusively to our member community — so your capital goes where your expertise already lives.
-              </p>
+              <div className="flex justify-center mt-10">
+                <svg width="32" height="32" viewBox="0 0 32 32" fill="none"><line x1="16" y1="0" x2="16" y2="32" stroke="#C9A84C" strokeWidth="1" strokeOpacity="0.4"/><line x1="0" y1="16" x2="32" y2="16" stroke="#C9A84C" strokeWidth="1" strokeOpacity="0.4"/></svg>
+              </div>
             </motion.div>
-            <motion.div variants={fadeUp} className="grid grid-cols-2 gap-px bg-[#C9A84C]/10">
-              {[
-                { stat: "2018", label: "Founded" },
-                { stat: "$40M+", label: "Capital Deployed" },
-                { stat: "500+", label: "Members" },
-                { stat: "100%", label: "Physician-Led" },
-              ].map((item) => (
-                <div key={item.label} className="bg-[#060E1A] p-10 flex flex-col justify-center">
-                  <StatCounter value={item.stat} label={item.label} />
+          </AnimatedSection>
+          {/* Laptop mockup */}
+          <AnimatedSection>
+            <motion.div variants={fadeUp} className="mb-20 flex justify-center">
+              <div className="relative w-full max-w-3xl">
+                <div className="relative rounded-xl shadow-2xl border border-white/10 overflow-hidden bg-[#111]" style={{ paddingTop: '60%' }}>
+                  <div className="absolute inset-0 flex items-center justify-center bg-[#080D18] overflow-hidden">
+                    <LaptopScreen />
+                  </div>
                 </div>
-              ))}
+                <div className="h-3 bg-gradient-to-b from-[#1a1a1a] to-[#111] rounded-b-xl mx-2" />
+                <div className="h-2 bg-[#0d0d0d] rounded-b-xl mx-10" />
+              </div>
             </motion.div>
+          </AnimatedSection>
+          {/* Three pillars */}
+          <AnimatedSection>
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-px bg-[#C9A84C]/10">
+              {[
+                { num: '01', title: 'DIRECT DEAL FLOW', desc: 'Access to private healthcare opportunities not broadly distributed.' },
+                { num: '02', title: 'CURATED ACCESS', desc: 'Selective review process. Not all applicants are accepted.' },
+                { num: '03', title: 'INSTITUTIONAL LENS', desc: 'Opportunities evaluated through capital markets discipline.' },
+              ].map((item) => (
+                <motion.div key={item.num} variants={fadeUp} className="bg-[#060E1A] p-12 text-center">
+                  <p className="text-[#C9A84C]/50 text-xs font-mono mb-4">{item.num}</p>
+                  <div className="w-8 h-px bg-[#C9A84C]/40 mx-auto mb-6" />
+                  <h3 className="text-white font-bold text-sm uppercase tracking-widest mb-6">{item.title}</h3>
+                  <div className="w-8 h-px bg-[#C9A84C]/20 mx-auto mb-6" />
+                  <p className="text-gray-500 text-sm leading-relaxed">{item.desc}</p>
+                </motion.div>
+              ))}
+            </div>
           </AnimatedSection>
         </div>
       </section>

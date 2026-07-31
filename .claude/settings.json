@@ -6,6 +6,10 @@
       "env": {
         "API_KEY": "an_sk_59e2225613008afe32d2c08fcf6b723e56e4f2adaa517c3eabd9c7e2d3aaa44a"
       }
+    },
+    "wix-mcp-remote": {
+      "type": "http",
+      "url": "https://mcp.wix.com/mcp"
     }
   }
 }
